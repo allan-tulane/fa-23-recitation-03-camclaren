@@ -50,7 +50,38 @@ def quadratic_multiply(x, y):
 
 def _quadratic_multiply(x, y):
     ### TODO
-    pass
+    xvec = x.binary_vec
+    yvec = y.binary_vec
+
+    # compares length of x and y in order to determine whether or not to pad zeros
+    if len(xvec) != len(yvec):
+        pad(x,y)
+    
+    # compares length of x and y again in order to determine value of n (to be used later in generating the exponents)
+    if len(xvec) > len(yvec):
+        n = len(xvec)
+    elif len(yvec) > len(xvec):
+        n = len(yvec)
+    
+    # checks whether or not to use simple multiplication or if calling _quadratic_multiply is needed
+    if x <=1 and y <= 1:
+        return x * y
+    else:
+        x_left = split_number(xvec)[0]
+        x_right = split_number(xvec)[1]
+        y_left = split_number(yvec)[0]
+        y_right = split_number(yvec)[1]
+
+        product1 = _quadratic_multiply(x_left, y_left)
+        product2 = _quadratic_multiply(x_right, y_right)
+        product3 = _quadratic_multiply(x_left, y_right)
+        product4 = _quadratic_multiply(x_right, y_left)
+
+        exponent2 = bit_shift(BinaryNumber(2), n).decimal_val
+        exponent2n = bit_shift(BinaryNumber(2), n/2).decimal_val
+
+    # returns final result (combines parallel results)
+        return (exponent2 * product1) + (exponent2n * (product2 + product3)) + product4
     ###
 
 
@@ -59,7 +90,7 @@ def _quadratic_multiply(x, y):
 def test_quadratic_multiply(x, y, f):
     start = time.time()
     # multiply two numbers x, y using function f
-    
+    f(x, y)
     return (time.time() - start)*1000
 
 
